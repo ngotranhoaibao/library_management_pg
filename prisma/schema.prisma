@@ -1,0 +1,21 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+model Author {
+  id    Int     @id @default(autoincrement())
+  name  String
+  bio   String?
+  books Book[]  // 1 Author có nhiều Book
+}
+
+model Book {
+  id       Int    @id @default(autoincrement())
+  title    String
+  price    Float
+  authorId Int    // Khóa ngoại
+  author   Author @relation(fields: [authorId], references: [id])
+}

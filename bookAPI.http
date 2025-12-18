@@ -1,0 +1,22 @@
+POST http://localhost:3001/books
+Content-Type: application/json
+
+{
+"title": "bao test",
+"price": 20,
+"authorId": 1
+}
+###
+GET http://localhost:3001/books
+###
+GET http://localhost:3001/books/1
+###
+PUT http://localhost:3001/books/1
+Content-Type: application/json
+
+{
+"title": "bao test new",
+"price": 21
+}
+###
+DELETE http://localhost:3001/books/1
