@@ -3,24 +3,25 @@ import {
   getAllAuthors,
   getAuthorDetail,
   updateAuthor,
-  deleteAuthor
+  deleteAuthor,
 } from "../services/author.service.js";
+import { successResponse, errorResponse } from "../utils/response.js";
 
 export const createAuthorController = async (req, res) => {
   try {
     const author = await createAuthor(req.body);
-    res.status(201).json(author);
+    return successResponse(res, author, "Author created successfully", 201);
   } catch (error) {
-    res.status(500).json({ message: error.message });
+    return errorResponse(res, 500, error.message);
   }
 };
 
 export const getAllAuthorsController = async (req, res) => {
   try {
     const authors = await getAllAuthors();
-    res.json(authors);
+    return successResponse(res, authors, "Get all authors successfully");
   } catch (error) {
-    res.status(500).json({ message: error.message });
+    return errorResponse(res, 500, error.message);
   }
 };
 
@@ -29,29 +30,39 @@ export const getAuthorDetailController = async (req, res) => {
     const author = await getAuthorDetail(req.params.id);
 
     if (!author) {
-      return res.status(404).json({ message: "Author not found" });
+      return errorResponse(res, 404, "Author not found");
     }
 
-    res.json(author);
+    return successResponse(res, author, "Get author detail successfully");
   } catch (error) {
-    res.status(500).json({ message: error.message });
+    return errorResponse(res, 500, error.message);
   }
 };
 
 export const updateAuthorController = async (req, res) => {
   try {
     const author = await updateAuthor(req.params.id, req.body);
-    res.json(author);
+
+    if (!author) {
+      return errorResponse(res, 404, "Author not found");
+    }
+
+    return successResponse(res, author, "Author updated successfully");
   } catch (error) {
-    res.status(500).json({ message: error.message });
+    return errorResponse(res, 500, error.message);
   }
 };
 
 export const deleteAuthorController = async (req, res) => {
   try {
-    await deleteAuthor(req.params.id);
-    res.json({ message: "Author deleted successfully" });
+    const author = await deleteAuthor(req.params.id);
+
+    if (!author) {
+      return errorResponse(res, 404, "Author not found");
+    }
+
+    return successResponse(res, null, "Author deleted successfully");
   } catch (error) {
-    res.status(500).json({ message: error.message });
+    return errorResponse(res, 500, error.message);
   }
 };

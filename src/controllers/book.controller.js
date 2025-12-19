@@ -5,22 +5,26 @@ import {
   updateBook,
   deleteBook
 } from "../services/book.service.js";
+import { successResponse, errorResponse } from "../utils/response.js";
 
 export const createBookController = async (req, res) => {
   try {
     const book = await createBook(req.body);
-    res.status(201).json(book);
+    return successResponse(res, book, "Book created successfully", 201);
   } catch (error) {
-    res.status(500).json({ message: error.message });
+    if (error.message === "Author not found") {
+      return errorResponse(res, 400, error.message);
+    }
+    return errorResponse(res, 500, error.message);
   }
 };
 
 export const getAllBooksController = async (req, res) => {
   try {
     const books = await getAllBooks();
-    res.json(books);
+    return successResponse(res, books, "Get all books successfully");
   } catch (error) {
-    res.status(500).json({ message: error.message });
+    return errorResponse(res, 500, error.message);
   }
 };
 
@@ -29,29 +33,42 @@ export const getBookDetailController = async (req, res) => {
     const book = await getBookDetail(req.params.id);
 
     if (!book) {
-      return res.status(404).json({ message: "Book not found" });
+      return errorResponse(res, 404, "Book not found");
     }
 
-    res.json(book);
+    return successResponse(res, book, "Get book detail successfully");
   } catch (error) {
-    res.status(500).json({ message: error.message });
+    return errorResponse(res, 500, error.message);
   }
 };
 
 export const updateBookController = async (req, res) => {
   try {
     const book = await updateBook(req.params.id, req.body);
-    res.json(book);
+
+    if (!book) {
+      return errorResponse(res, 404, "Book not found");
+    }
+
+    return successResponse(res, book, "Book updated successfully");
   } catch (error) {
-    res.status(500).json({ message: error.message });
+    if (error.message === "Author not found") {
+      return errorResponse(res, 400, error.message);
+    }
+    return errorResponse(res, 500, error.message);
   }
 };
 
 export const deleteBookController = async (req, res) => {
   try {
-    await deleteBook(req.params.id);
-    res.json({ message: "Book deleted successfully" });
+    const book = await deleteBook(req.params.id);
+
+    if (!book) {
+      return errorResponse(res, 404, "Book not found");
+    }
+
+    return successResponse(res, null, "Book deleted successfully");
   } catch (error) {
-    res.status(500).json({ message: error.message });
+    return errorResponse(res, 500, error.message);
   }
 };
