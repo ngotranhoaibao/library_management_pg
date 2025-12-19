@@ -19,6 +19,7 @@ const options = {
       schemas: {
         Author: {
           type: "object",
+          required: ["name"],
           properties: {
             id: { type: "integer", example: 1 },
             name: { type: "string", example: "J.K. Rowling" },
@@ -29,8 +30,10 @@ const options = {
             }
           }
         },
+
         Book: {
           type: "object",
+          required: ["title", "price", "authorId"],
           properties: {
             id: { type: "integer", example: 1 },
             title: { type: "string", example: "Harry Potter" },
@@ -38,6 +41,16 @@ const options = {
             authorId: { type: "integer", example: 1 }
           }
         },
+
+        SuccessResponse: {
+          type: "object",
+          properties: {
+            success: { type: "boolean", example: true },
+            message: { type: "string", example: "Success" },
+            data: {}
+          }
+        },
+
         ValidationError: {
           type: "object",
           properties: {
@@ -46,19 +59,21 @@ const options = {
               items: {
                 type: "object",
                 properties: {
-                  msg: { type: "string" },
-                  path: { type: "string" }
+                  msg: { type: "string", example: "Name is required" },
+                  path: { type: "string", example: "name" }
                 }
               }
             }
           }
         },
+
         NotFoundError: {
           type: "object",
           properties: {
             message: { type: "string", example: "Resource not found" }
           }
         },
+
         ServerError: {
           type: "object",
           properties: {
@@ -68,6 +83,7 @@ const options = {
       }
     }
   },
+
   apis: ["./src/routes/*.js"]
 };
 

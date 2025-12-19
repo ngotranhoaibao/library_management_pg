@@ -18,6 +18,13 @@ const validate = (req, res, next) => {
 
 /**
  * @swagger
+ * tags:
+ *   name: Book
+ *   description: Book management
+ */
+
+/**
+ * @swagger
  * /books:
  *   post:
  *     summary: Create new book
@@ -30,7 +37,11 @@ const validate = (req, res, next) => {
  *             $ref: '#/components/schemas/Book'
  *     responses:
  *       201:
- *         description: Created
+ *         description: Book created successfully
+ *       400:
+ *         description: Validation error or Author not found
+ *       500:
+ *         description: Server error
  */
 router.post(
   "/",
@@ -51,7 +62,9 @@ router.post(
  *     tags: [Book]
  *     responses:
  *       200:
- *         description: List of books
+ *         description: Get all books successfully
+ *       500:
+ *         description: Server error
  */
 router.get("/", getAllBooksController);
 
@@ -67,6 +80,13 @@ router.get("/", getAllBooksController);
  *         required: true
  *         schema:
  *           type: integer
+ *     responses:
+ *       200:
+ *         description: Get book detail successfully
+ *       404:
+ *         description: Book not found
+ *       500:
+ *         description: Server error
  */
 router.get("/:id", getBookDetailController);
 
@@ -82,6 +102,20 @@ router.get("/:id", getBookDetailController);
  *         required: true
  *         schema:
  *           type: integer
+ *     requestBody:
+ *       content:
+ *         application/json:
+ *           schema:
+ *             $ref: '#/components/schemas/Book'
+ *     responses:
+ *       200:
+ *         description: Book updated successfully
+ *       400:
+ *         description: Author not found
+ *       404:
+ *         description: Book not found
+ *       500:
+ *         description: Server error
  */
 router.put(
   "/:id",
@@ -100,6 +134,19 @@ router.put(
  *   delete:
  *     summary: Delete book
  *     tags: [Book]
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: integer
+ *     responses:
+ *       200:
+ *         description: Book deleted successfully
+ *       404:
+ *         description: Book not found
+ *       500:
+ *         description: Server error
  */
 router.delete("/:id", deleteBookController);
 

@@ -18,6 +18,13 @@ const validate = (req, res, next) => {
 
 /**
  * @swagger
+ * tags:
+ *   name: Author
+ *   description: Author management
+ */
+
+/**
+ * @swagger
  * /authors:
  *   post:
  *     summary: Create new author
@@ -30,9 +37,13 @@ const validate = (req, res, next) => {
  *             $ref: '#/components/schemas/Author'
  *     responses:
  *       201:
- *         description: Created
+ *         description: Author created successfully
  *       400:
  *         description: Validation error
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ValidationError'
  *       500:
  *         description: Server error
  */
@@ -54,7 +65,7 @@ router.post(
  *     tags: [Author]
  *     responses:
  *       200:
- *         description: List of authors
+ *         description: Get all authors successfully
  *       500:
  *         description: Server error
  */
@@ -74,9 +85,15 @@ router.get("/", getAllAuthorsController);
  *           type: integer
  *     responses:
  *       200:
- *         description: Author detail
+ *         description: Get author detail successfully
  *       404:
  *         description: Author not found
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/NotFoundError'
+ *       500:
+ *         description: Server error
  */
 router.get("/:id", getAuthorDetailController);
 
@@ -99,7 +116,9 @@ router.get("/:id", getAuthorDetailController);
  *             $ref: '#/components/schemas/Author'
  *     responses:
  *       200:
- *         description: Updated
+ *         description: Author updated successfully
+ *       404:
+ *         description: Author not found
  *       500:
  *         description: Server error
  */
@@ -127,7 +146,11 @@ router.put(
  *           type: integer
  *     responses:
  *       200:
- *         description: Deleted
+ *         description: Author deleted successfully
+ *       404:
+ *         description: Author not found
+ *       500:
+ *         description: Server error
  */
 router.delete("/:id", deleteAuthorController);
 
